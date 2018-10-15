@@ -6,8 +6,8 @@ HOMEBREW_PREFIX = "/usr/local".freeze
 HOMEBREW_REPOSITORY = "/usr/local/Homebrew".freeze
 HOMEBREW_CACHE = "#{ENV["HOME"]}/Library/Caches/Homebrew".freeze
 HOMEBREW_OLD_CACHE = "/Library/Caches/Homebrew".freeze
-BREW_REPO = "https://github.com/Homebrew/brew".freeze
-CORE_TAP_REPO = "https://github.com/Homebrew/homebrew-core".freeze
+BREW_REPO = "https://github.com/vcrini/brew".freeze
+CORE_TAP_REPO = "https://github.com/vcrini/homebrew-core".freeze
 
 # TODO: bump version when new macOS is released
 MACOS_LATEST_SUPPORTED = "10.14".freeze
