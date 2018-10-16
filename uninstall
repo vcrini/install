@@ -7,7 +7,7 @@ require "pathname"
 
 # Default options
 options = {
-  :force => false,
+  :force => true,
   :quiet => false,
   :dry_run => false,
   :skip_cache_and_logs => false
