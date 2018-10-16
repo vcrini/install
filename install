@@ -365,6 +365,7 @@ EOABORT
 ohai "Downloading and installing Homebrew..."
 Dir.chdir HOMEBREW_REPOSITORY do
   if git
+    ohai "1"
     # we do it in four steps to avoid merge errors when reinstalling
     system git, "init", "-q"
 
@@ -384,7 +385,9 @@ Dir.chdir HOMEBREW_REPOSITORY do
     system "ln", "-sf", "#{HOMEBREW_REPOSITORY}/bin/brew", "#{HOMEBREW_PREFIX}/bin/brew"
 
     system "#{HOMEBREW_PREFIX}/bin/brew", "update", "--force"
+    ohai "2"
   else
+    ohai "3"
     # -m to stop tar erroring out if it can't modify the mtime for root owned directories
     # pipefail to cause the exit status from curl to propagate if it fails
     curl_flags = "fsSL"
@@ -394,13 +397,20 @@ Dir.chdir HOMEBREW_REPOSITORY do
       "/usr/bin/curl -#{curl_flags} #{BREW_REPO}/tarball/master | " \
       "/usr/bin/tar xz -m --strip 1'"
 
+    ohai "4"
     system "ln", "-sf", "#{HOMEBREW_REPOSITORY}/bin/brew", "#{HOMEBREW_PREFIX}/bin/brew"
 
     system "/bin/mkdir", "-p", core_tap
+    ohai "5"
     Dir.chdir core_tap do
+      ohai "/bin/bash -o pipefail -c '" \
+        "/usr/bin/curl -#{curl_flags} #{CORE_TAP_REPO}/tarball/master | " \
+        "/usr/bin/tar xz -m --strip 1'"
+
       system "/bin/bash -o pipefail -c '" \
         "/usr/bin/curl -#{curl_flags} #{CORE_TAP_REPO}/tarball/master | " \
         "/usr/bin/tar xz -m --strip 1'"
+      ohai "Done"
     end
   end
 end
