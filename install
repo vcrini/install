@@ -368,26 +368,31 @@ Dir.chdir HOMEBREW_REPOSITORY do
     ohai "1"
     # we do it in four steps to avoid merge errors when reinstalling
     system git, "init", "-q"
+    ohai "2"
 
     # "git remote add" will fail if the remote is defined in the global config
     system git, "config", "remote.origin.url", BREW_REPO
     system git, "config", "remote.origin.fetch", "+refs/heads/*:refs/remotes/origin/*"
+    ohai "3"
 
     # ensure we don't munge line endings on checkout
     system git, "config", "core.autocrlf", "false"
+    ohai "4"
 
     args = git, "fetch", "origin", "master:refs/remotes/origin/master",
            "--tags", "--force"
     system(*args)
+    ohai "5"
 
     system git, "reset", "--hard", "origin/master"
+    ohai "6"
 
     system "ln", "-sf", "#{HOMEBREW_REPOSITORY}/bin/brew", "#{HOMEBREW_PREFIX}/bin/brew"
 
+    ohai "7"
     system "#{HOMEBREW_PREFIX}/bin/brew", "update", "--force"
-    ohai "2"
+    ohai "8"
   else
-    ohai "3"
     # -m to stop tar erroring out if it can't modify the mtime for root owned directories
     # pipefail to cause the exit status from curl to propagate if it fails
     curl_flags = "fsSL"
@@ -397,11 +402,9 @@ Dir.chdir HOMEBREW_REPOSITORY do
       "/usr/bin/curl -#{curl_flags} #{BREW_REPO}/tarball/master | " \
       "/usr/bin/tar xz -m --strip 1'"
 
-    ohai "4"
     system "ln", "-sf", "#{HOMEBREW_REPOSITORY}/bin/brew", "#{HOMEBREW_PREFIX}/bin/brew"
 
     system "/bin/mkdir", "-p", core_tap
-    ohai "5"
     Dir.chdir core_tap do
       ohai "/bin/bash -o pipefail -c '" \
         "/usr/bin/curl -#{curl_flags} #{CORE_TAP_REPO}/tarball/master | " \
